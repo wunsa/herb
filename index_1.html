@@ -1,0 +1,1174 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Herb · Your growing companion</title>
+  <meta name="description" content="Herb, the Harvestory growing companion. Training, crop cycles and daily care for Harvestory Champions.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#2D5016">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="herb-icon.svg" type="image/svg+xml">
+  
+  <style>
+/* ============================================================
+   HERB · design system
+   Carried over from the Harvestory house style:
+   cream ground, deep forest greens, orange accents,
+   Fraunces (serif display) and Poppins (body).
+   Phone first. One file, commented.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Poppins:wght@400;500;600&display=swap');
+
+:root {
+  --cream: #FBF7EF;
+  --green-deep: #2D5016;
+  --green-mid: #4A7C25;
+  --green-soft: #EAF0E2;
+  --sage: #DCE5D0;
+  --orange: #D9722B;
+  --orange-soft: #F6E3D3;
+  --ink: #22301A;
+  --ink-soft: #5C6653;
+  --white: #FFFFFF;
+  --danger: #A03123;
+  --radius: 14px;
+  --shadow: 0 2px 10px rgba(45, 80, 22, 0.08);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'Poppins', -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+}
+
+/* ---------- boot splash ---------- */
+.boot { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.boot-mark { font-family: var(--font-display); font-size: 44px; font-weight: 600; color: var(--green-deep); }
+.boot-mark::after { content: '.'; color: var(--orange); }
+.boot-sub { color: var(--ink-soft); font-size: 14px; }
+
+/* ---------- layout ---------- */
+.shell { min-height: 100dvh; display: flex; flex-direction: column; }
+.topbar {
+  background: var(--green-deep);
+  color: var(--cream);
+  padding: calc(env(safe-area-inset-top, 0px) + 14px) 18px 12px;
+  display: flex; align-items: baseline; justify-content: space-between;
+  border-bottom: 4px solid var(--orange);
+}
+.topbar .brand { font-family: var(--font-display); font-size: 24px; font-weight: 600; letter-spacing: 0.2px; }
+.topbar .brand em { font-style: italic; color: #CFE0BC; }
+.topbar .who { font-size: 12px; opacity: 0.85; text-align: right; }
+.topbar .who a { color: var(--cream); text-decoration: underline; cursor: pointer; }
+
+.main { flex: 1; padding: 18px 16px 110px; max-width: 720px; width: 100%; margin: 0 auto; }
+
+/* ---------- bottom navigation ---------- */
+.nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white);
+  border-top: 1px solid var(--sage);
+  display: flex; justify-content: space-around; align-items: stretch;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  z-index: 40;
+}
+.nav button {
+  flex: 1; background: none; border: none; cursor: pointer;
+  font-family: var(--font-body); font-size: 11px; font-weight: 500;
+  color: var(--ink-soft); padding: 9px 2px 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.nav button .ico { font-size: 20px; line-height: 1; }
+.nav button.active { color: var(--green-deep); }
+.nav button.active .ico { transform: scale(1.08); }
+
+/* Herb floating button: champions only */
+.herb-fab {
+  position: fixed; right: 16px; bottom: 76px; z-index: 45;
+  width: 58px; height: 58px; border-radius: 50%;
+  background: var(--orange); color: var(--white);
+  border: none; cursor: pointer; box-shadow: 0 4px 14px rgba(217, 114, 43, 0.4);
+  font-size: 26px; display: flex; align-items: center; justify-content: center;
+}
+.herb-fab:active { transform: scale(0.96); }
+
+/* ---------- headings and text ---------- */
+h1.page {
+  font-family: var(--font-display); font-weight: 600; font-size: 26px;
+  color: var(--green-deep); margin: 4px 0 2px;
+}
+h1.page em { font-style: italic; color: var(--green-mid); }
+.page-sub { color: var(--ink-soft); font-size: 13px; margin: 0 0 16px; }
+.eyebrow {
+  text-transform: uppercase; letter-spacing: 0.12em; font-size: 11px;
+  font-weight: 600; color: var(--orange); margin: 18px 0 6px;
+}
+.underline-accent { width: 26mm; max-width: 90px; height: 3px; background: var(--green-mid); border-radius: 2px; margin: 6px 0 14px; }
+
+/* ---------- cards ---------- */
+.card {
+  background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 14px 16px; margin-bottom: 12px;
+}
+.card.sage { background: var(--green-soft); box-shadow: none; }
+.card.deep { background: var(--green-deep); color: var(--cream); }
+.card.deep .muted { color: #CFE0BC; }
+.card h3 { margin: 0 0 4px; font-family: var(--font-display); font-weight: 600; font-size: 17px; color: var(--green-deep); }
+.card.deep h3 { color: var(--cream); }
+.muted { color: var(--ink-soft); font-size: 13px; }
+.spread { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+
+/* ---------- task rows ---------- */
+.task {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 12px 14px; margin-bottom: 10px;
+}
+.task.done { opacity: 0.55; }
+.task .tick {
+  width: 34px; height: 34px; min-width: 34px; border-radius: 50%;
+  border: 2px solid var(--green-mid); background: var(--white);
+  cursor: pointer; font-size: 16px; color: var(--green-deep);
+}
+.task.done .tick { background: var(--green-mid); color: var(--white); }
+.task .t-title { font-weight: 500; }
+.task .t-meta { font-size: 12px; color: var(--ink-soft); }
+.task .chip { margin-left: auto; }
+
+.chip {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+}
+.chip.orange { background: var(--orange-soft); color: var(--orange); }
+.chip.green { background: var(--green-soft); color: var(--green-mid); }
+.chip.plain { background: var(--sage); color: var(--ink-soft); }
+.chip.red { background: #F5DEDA; color: var(--danger); }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-block; border: none; cursor: pointer; text-align: center;
+  font-family: var(--font-body); font-weight: 600; font-size: 14px;
+  border-radius: 999px; padding: 11px 22px;
+}
+.btn.primary { background: var(--green-deep); color: var(--cream); }
+.btn.orange { background: var(--orange); color: var(--white); }
+.btn.ghost { background: none; color: var(--green-deep); border: 1.5px solid var(--green-mid); }
+.btn.small { padding: 7px 14px; font-size: 12px; }
+.btn.block { display: block; width: 100%; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+
+/* ---------- forms ---------- */
+input[type=email], input[type=text], input[type=number], input[type=date], select, textarea {
+  width: 100%; padding: 11px 12px; border-radius: 10px;
+  border: 1.5px solid var(--sage); background: var(--white);
+  font-family: var(--font-body); font-size: 15px; color: var(--ink);
+}
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--green-mid); border-color: var(--green-mid); }
+label.f { display: block; font-size: 12px; font-weight: 600; color: var(--ink-soft); margin: 12px 0 4px; }
+
+/* ---------- login ---------- */
+.login-wrap { min-height: 100dvh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.login {
+  background: var(--white); border-radius: 18px; box-shadow: var(--shadow);
+  padding: 34px 26px; width: 100%; max-width: 380px; text-align: center;
+  border-top: 6px solid var(--green-deep);
+}
+.login .mark { font-family: var(--font-display); font-size: 40px; font-weight: 600; color: var(--green-deep); }
+.login .mark::after { content: '.'; color: var(--orange); }
+.login p { color: var(--ink-soft); font-size: 14px; }
+
+/* ---------- grow: systems and slots ---------- */
+.system-head { display: flex; justify-content: space-between; align-items: baseline; margin: 14px 0 8px; }
+.slot-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; }
+.slot {
+  aspect-ratio: 1; border-radius: 7px; border: 1.5px solid var(--sage);
+  background: var(--white); cursor: pointer; position: relative;
+  font-size: 9px; color: var(--ink-soft);
+  display: flex; align-items: center; justify-content: center;
+}
+.slot.germinating { background: #F3EDD9; border-color: #D8CB9A; }
+.slot.dome       { background: #E7EFD9; border-color: #BFD3A0; }
+.slot.propagation{ background: #D8E7C4; border-color: #A4C57E; }
+.slot.growing    { background: #B7D398; border-color: var(--green-mid); }
+.slot.ready      { background: var(--green-mid); border-color: var(--green-deep); color: var(--white); font-weight: 600; }
+.slot.replant    { background: var(--orange-soft); border-color: var(--orange); }
+.legend { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 4px; font-size: 11px; color: var(--ink-soft); }
+.legend .sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -2px; margin-right: 4px; border: 1px solid rgba(0,0,0,0.08); }
+
+/* ---------- learn: skills ---------- */
+.skill-row { margin-bottom: 12px; }
+.skill-row .spread { margin-bottom: 4px; }
+.skill-name { font-weight: 600; font-size: 13px; }
+.skill-level { font-family: var(--font-display); color: var(--green-deep); font-weight: 600; }
+.xpbar { height: 8px; background: var(--sage); border-radius: 999px; overflow: hidden; }
+.xpbar .fill { height: 100%; background: linear-gradient(90deg, var(--green-mid), var(--green-deep)); border-radius: 999px; }
+.total-level {
+  text-align: center; padding: 18px; margin-bottom: 14px;
+}
+.total-level .n { font-family: var(--font-display); font-size: 44px; font-weight: 600; color: var(--cream); line-height: 1; }
+.total-level .l { font-size: 12px; color: #CFE0BC; text-transform: uppercase; letter-spacing: 0.1em; }
+
+.lesson-body { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 18px; }
+.lesson-body h2 { font-family: var(--font-display); color: var(--green-deep); font-size: 20px; margin: 18px 0 8px; }
+.lesson-body h2:first-child { margin-top: 0; }
+.lesson-body li { margin-bottom: 6px; }
+.lesson-body strong { color: var(--green-deep); }
+
+/* ---------- herb chat ---------- */
+.chat-wrap {
+  position: fixed; inset: 0; z-index: 60; background: var(--cream);
+  display: flex; flex-direction: column;
+}
+.chat-top {
+  background: var(--green-deep); color: var(--cream);
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 4px solid var(--orange);
+}
+.chat-top .t { font-family: var(--font-display); font-size: 20px; font-weight: 600; }
+.chat-top button { background: none; border: none; color: var(--cream); font-size: 22px; cursor: pointer; }
+.chat-log { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.bubble { max-width: 84%; padding: 10px 14px; border-radius: 16px; font-size: 14px; white-space: pre-wrap; }
+.bubble.user { align-self: flex-end; background: var(--green-mid); color: var(--white); border-bottom-right-radius: 4px; }
+.bubble.herb { align-self: flex-start; background: var(--white); box-shadow: var(--shadow); border-bottom-left-radius: 4px; }
+.bubble.herb.thinking { color: var(--ink-soft); font-style: italic; }
+.bubble img { max-width: 100%; border-radius: 10px; display: block; margin-bottom: 6px; }
+.chat-input {
+  display: flex; gap: 8px; padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 10px);
+  background: var(--white); border-top: 1px solid var(--sage); align-items: flex-end;
+}
+.chat-input textarea { flex: 1; resize: none; max-height: 110px; }
+.chat-input .iconbtn {
+  background: var(--green-soft); border: none; border-radius: 10px;
+  width: 44px; height: 44px; font-size: 20px; cursor: pointer; color: var(--green-deep);
+}
+.chat-input .send { background: var(--orange); color: var(--white); }
+
+/* ---------- tables (master / client) ---------- */
+table.data { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--white); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+table.data th { background: var(--green-soft); color: var(--green-deep); text-align: left; padding: 9px 10px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+table.data td { padding: 9px 10px; border-top: 1px solid var(--cream); }
+
+.stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px; }
+.stat { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px; text-align: center; }
+.stat .n { font-family: var(--font-display); font-size: 30px; font-weight: 600; color: var(--green-deep); line-height: 1.1; }
+.stat .l { font-size: 11px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+
+/* ---------- modal ---------- */
+.modal-scrim { position: fixed; inset: 0; background: rgba(34, 48, 26, 0.45); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+.modal {
+  background: var(--cream); width: 100%; max-width: 560px;
+  border-radius: 18px 18px 0 0; padding: 20px 18px calc(env(safe-area-inset-bottom, 0px) + 20px);
+  max-height: 86dvh; overflow-y: auto;
+}
+.modal h3 { font-family: var(--font-display); color: var(--green-deep); margin: 0 0 10px; font-size: 20px; }
+
+/* ---------- toast ---------- */
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  bottom: 140px; z-index: 70;
+  background: var(--green-deep); color: var(--cream);
+  padding: 10px 20px; border-radius: 999px; font-size: 13px; font-weight: 500;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25); opacity: 0; transition: opacity 0.25s;
+  pointer-events: none; max-width: 88vw; text-align: center;
+}
+.toast.show { opacity: 1; }
+.toast.xp { background: var(--orange); }
+
+@media (min-width: 700px) {
+  .slot-grid { grid-template-columns: repeat(20, 1fr); }
+  .stat-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+</style>
+</head>
+<body>
+  <div id="app" aria-live="polite">
+    <div class="boot">
+      <div class="boot-mark">Herb</div>
+      <div class="boot-sub">Your growing companion</div>
+    </div>
+  </div>
+
+  <!-- Supabase client (UMD build, pinned major version) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+// ============================================================
+// HERB · configuration
+// The two values below are PUBLIC by design. The anon key is
+// meant to be visible in the browser: row-level security in the
+// database is what protects the data, not this key.
+// Fill both in from Supabase: Project Settings, then API.
+// ============================================================
+window.HERB_CONFIG = {
+  SUPABASE_URL: 'https://ljvvcsrbwcanaqgaajsf.supabase.co',      // e.g. https://abcdefgh.supabase.co
+  SUPABASE_ANON_KEY: 'sb_publishable_FkxRUkPzCs4rYL2zwaVU-Q_0L6xYPqt',    // the long "anon public" key
+  APP_NAME: 'Herb',
+  SITE_TAGLINE: 'Your growing companion'
+};
+
+</script>
+  <script>
+/* ============================================================
+   HERB · application
+   Vanilla JavaScript, no build step. The browser is a window:
+   every rule that matters is enforced again by the database.
+   ============================================================ */
+
+(function () {
+  'use strict';
+
+  const cfg = window.HERB_CONFIG || {};
+  const configured = cfg.SUPABASE_URL && !String(cfg.SUPABASE_URL).startsWith('PASTE_');
+  const sb = configured ? window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY) : null;
+
+  // ---------- state ----------
+  const S = {
+    session: null,
+    profile: null,        // { id, full_name, role, site_id }
+    site: null,
+    systems: [],
+    varieties: [],
+    plantings: [],
+    tasks: [],
+    courses: [],
+    lessons: [],
+    completions: new Set(),   // lesson ids
+    xp: {},                   // skill -> total xp
+    orders: [],
+    view: 'today',
+    chatOpen: false,
+    conversationId: null,
+    chatLog: [],              // { role, content, photoUrl? }
+    pendingPhoto: null,       // { base64, mime, previewUrl }
+    lessonOpen: null,         // lesson object
+    modal: null               // function rendering modal content
+  };
+
+  const $app = document.getElementById('app');
+
+  // ---------- tiny helpers ----------
+  const esc = (s) => String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const todayISO = () => new Date().toISOString().slice(0, 10);
+  const fmtDate = (iso) => {
+    if (!iso) return '';
+    const d = new Date(iso + (iso.length === 10 ? 'T00:00:00' : ''));
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  };
+  const addDays = (iso, n) => {
+    const d = new Date(iso + 'T00:00:00'); d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0, 10);
+  };
+  const daysBetween = (a, b) => Math.round((new Date(b) - new Date(a)) / 86400000);
+
+  let toastTimer = null;
+  function toast(msg, xp) {
+    let t = document.querySelector('.toast');
+    if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
+    t.textContent = msg;
+    t.classList.toggle('xp', !!xp);
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+  }
+
+  // Minimal markdown for lesson bodies: ##, lists, bold, italics, paragraphs.
+  function md(src) {
+    const lines = String(src || '').split('\n');
+    let out = '', inList = false;
+    const inline = (s) => esc(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    for (const raw of lines) {
+      const line = raw.trimEnd();
+      if (/^\s*[-*]\s+/.test(line)) {
+        if (!inList) { out += '<ul>'; inList = true; }
+        out += '<li>' + inline(line.replace(/^\s*[-*]\s+/, '')) + '</li>';
+        continue;
+      }
+      if (inList) { out += '</ul>'; inList = false; }
+      if (/^##\s+/.test(line)) { out += '<h2>' + inline(line.replace(/^##\s+/, '')) + '</h2>'; continue; }
+      if (/^\d+\.\s+/.test(line)) { out += '<p>' + inline(line) + '</p>'; continue; }
+      if (line.trim() === '') continue;
+      out += '<p>' + inline(line) + '</p>';
+    }
+    if (inList) out += '</ul>';
+    return out;
+  }
+
+  // ---------- progression ----------
+  const SKILLS = ['water', 'propagation', 'growing', 'harvesting', 'pest_watch', 'systems', 'safety'];
+  const SKILL_LABELS = {
+    water: 'Water', propagation: 'Propagation', growing: 'Growing', harvesting: 'Harvesting',
+    pest_watch: 'Pest Watch', systems: 'Systems', safety: 'Safety'
+  };
+  const levelFromXp = (xp) => Math.max(1, Math.floor(1 + Math.sqrt((xp || 0) / 50)));
+  const xpForLevel = (lvl) => 50 * (lvl - 1) * (lvl - 1);
+  const totalLevel = () => SKILLS.reduce((n, s) => n + levelFromXp(S.xp[s] || 0), 0);
+
+  function courseComplete(slug) {
+    const c = S.courses.find((x) => x.slug === slug);
+    if (!c) return false;
+    const ls = S.lessons.filter((l) => l.course_id === c.id);
+    return ls.length > 0 && ls.every((l) => S.completions.has(l.id));
+  }
+  const canLogCare = () => courseComplete('safety') || S.profile.role === 'master';
+  const canLogNutrients = () => courseComplete('water') || S.profile.role === 'master';
+
+  // ---------- plant stages ----------
+  function stageOf(p) {
+    const v = S.varieties.find((x) => x.id === p.variety_id);
+    if (!v) return { key: 'growing', label: 'Growing' };
+    const d = daysBetween(p.sow_date, todayISO());
+    const germEnd = v.germination_days;
+    const domeEnd = germEnd + v.dome_days;
+    const propEnd = domeEnd + v.propagation_days;
+    if (d < germEnd) return { key: 'germinating', label: 'Germinating', day: d };
+    if (d < domeEnd) return { key: 'dome', label: 'In dome', day: d };
+    if (d < propEnd) return { key: 'propagation', label: 'Propagating', day: d };
+    if (d < v.days_to_first_cut) return { key: 'growing', label: 'Growing on', day: d };
+    if (v.crop_style === 'one_and_done') return { key: 'ready', label: 'Ready to lift', day: d };
+    if (v.cut_cadence_days && d > v.days_to_first_cut + v.cut_cadence_days * 6)
+      return { key: 'replant', label: 'Replant due', day: d };
+    return { key: 'ready', label: 'Ready to cut', day: d };
+  }
+
+  // ---------- data loading ----------
+  async function loadAll() {
+    const uid = S.session.user.id;
+    const { data: prof, error: pErr } = await sb.from('profiles').select('*').eq('id', uid).maybeSingle();
+    if (pErr) { console.error(pErr); }
+    if (!prof) { S.profile = null; render(); return; }
+    S.profile = prof;
+
+    const wants = [
+      sb.from('varieties').select('*').order('category').order('name'),
+      sb.from('courses').select('*').order('sort'),
+      sb.from('lessons').select('*').order('sort'),
+      sb.from('completions').select('lesson_id').eq('user_id', uid),
+      sb.from('xp_events').select('skill, amount').eq('user_id', uid)
+    ];
+    if (prof.site_id || prof.role === 'master') {
+      wants.push(sb.from('sites').select('*'));
+      wants.push(sb.from('systems').select('*').order('name'));
+      wants.push(sb.from('plantings').select('*').eq('status', 'active'));
+      wants.push(sb.from('tasks').select('*').eq('status', 'open').order('due_date'));
+      wants.push(sb.from('orders').select('*, order_items(*, varieties(name))').order('created_at', { ascending: false }));
+    }
+    const res = await Promise.all(wants);
+    const [vRes, cRes, lRes, cmRes, xpRes, siteRes, sysRes, plRes, tkRes, orRes] = res;
+    S.varieties = vRes.data || [];
+    S.courses = cRes.data || [];
+    S.lessons = lRes.data || [];
+    S.completions = new Set((cmRes.data || []).map((r) => r.lesson_id));
+    S.xp = {};
+    for (const r of (xpRes.data || [])) S.xp[r.skill] = (S.xp[r.skill] || 0) + r.amount;
+    S.site = siteRes && siteRes.data ? (siteRes.data.find((s) => s.id === prof.site_id) || siteRes.data[0] || null) : null;
+    S.systems = (sysRes && sysRes.data) || [];
+    S.plantings = (plRes && plRes.data) || [];
+    S.tasks = (tkRes && tkRes.data) || [];
+    S.orders = (orRes && orRes.data) || [];
+
+    if (prof.role === 'champion') await ensureDailyCheck();
+    S.view = defaultView();
+    render();
+  }
+
+  function defaultView() {
+    const r = S.profile ? S.profile.role : 'champion';
+    if (r === 'chef') return 'kitchen';
+    if (r === 'client') return 'client';
+    if (r === 'master') return 'master';
+    return 'today';
+  }
+
+  async function ensureDailyCheck() {
+    const t = todayISO();
+    const exists = S.tasks.some((x) => x.task_type === 'daily_check' && x.due_date === t);
+    if (exists || !S.site) return;
+    const { data, error } = await sb.from('tasks').insert({
+      site_id: S.site.id, title: 'Daily check: water, plants, anything unusual',
+      task_type: 'daily_check', due_date: t
+    }).select().single();
+    if (!error && data) S.tasks.push(data);
+  }
+
+  async function logEvent(type, payload, photoPath) {
+    if (!S.site) return;
+    await sb.from('events').insert({
+      site_id: S.site.id, user_id: S.session.user.id,
+      event_type: type, payload: payload || {}, photo_path: photoPath || null
+    });
+  }
+
+  async function grantXp(skill, amount, reason) {
+    await sb.from('xp_events').insert({ user_id: S.session.user.id, skill, amount, reason });
+    S.xp[skill] = (S.xp[skill] || 0) + amount;
+    toast('+' + amount + ' ' + (SKILL_LABELS[skill] || skill) + ' XP', true);
+  }
+
+  // ---------- task actions ----------
+  const TASK_SKILL = {
+    daily_check: 'water', vent_dome: 'propagation', transplant: 'propagation',
+    first_cut: 'harvesting', cut: 'harvesting', replant: 'growing',
+    sow: 'growing', order: 'growing', lesson: 'growing', general: 'growing'
+  };
+  const TASK_XP = { daily_check: 20, vent_dome: 15, transplant: 25, first_cut: 40, cut: 20, replant: 25, sow: 20, order: 15, lesson: 0, general: 10 };
+
+  async function completeTask(task) {
+    if (!canLogCare()) { toast('Complete the Safety First course to log site work'); return; }
+    const { error } = await sb.from('tasks').update({
+      status: 'done', completed_by: S.session.user.id, completed_at: new Date().toISOString()
+    }).eq('id', task.id);
+    if (error) { toast('Could not save, try again'); return; }
+    task.status = 'done';
+    await logEvent('task_complete', { task_id: task.id, task_type: task.task_type, title: task.title });
+    await grantXp(TASK_SKILL[task.task_type] || 'growing', TASK_XP[task.task_type] || 10, 'Task: ' + task.title);
+    render();
+  }
+
+  // ---------- planting ----------
+  function tasksForPlanting(p, v) {
+    const list = [];
+    const sow = p.sow_date;
+    const domeEnd = v.germination_days + v.dome_days;
+    const propEnd = domeEnd + v.propagation_days;
+    list.push({ title: 'Vent and check dome: ' + v.name + ' (' + p.slot_ref + ')', task_type: 'vent_dome', due_date: addDays(sow, v.germination_days + Math.max(1, Math.floor(v.dome_days / 2))) });
+    if (v.propagation_days > 0)
+      list.push({ title: 'Transplant to system: ' + v.name + ' (' + p.slot_ref + ')', task_type: 'transplant', due_date: addDays(sow, domeEnd) });
+    list.push({ title: 'First cut window opens: ' + v.name + ' (' + p.slot_ref + ')', task_type: 'first_cut', due_date: addDays(sow, v.days_to_first_cut) });
+    return list.map((t) => Object.assign(t, { site_id: p.site_id, planting_id: p.id, order_id: p.order_id || null }));
+  }
+
+  async function sowPlanting(systemId, slotRef, varietyId, sowDate, orderId) {
+    const v = S.varieties.find((x) => x.id === varietyId);
+    if (!v) return null;
+    if (v.excluded) { toast('That variety is excluded at this site: ' + v.exclusion_reason); return null; }
+    const { data: p, error } = await sb.from('plantings').insert({
+      site_id: S.site.id, system_id: systemId, slot_ref: slotRef,
+      variety_id: varietyId, sow_date: sowDate, planted_by: S.session.user.id,
+      order_id: orderId || null
+    }).select().single();
+    if (error) { toast('Could not save the sowing'); console.error(error); return null; }
+    S.plantings.push(p);
+    const ts = tasksForPlanting(p, v);
+    const { data: newTasks } = await sb.from('tasks').insert(ts).select();
+    if (newTasks) S.tasks.push(...newTasks);
+    await logEvent('sow', { planting_id: p.id, variety: v.name, slot: slotRef, sow_date: sowDate });
+    await grantXp('growing', 20, 'Sowed ' + v.name);
+    return p;
+  }
+
+  // ---------- views ----------
+  function render() {
+    if (!configured) { $app.innerHTML = renderUnconfigured(); return; }
+    if (!S.session) { $app.innerHTML = renderLogin(); wireLogin(); return; }
+    if (!S.profile) { $app.innerHTML = renderNoProfile(); return; }
+
+    const role = S.profile.role;
+    const navItems = [];
+    if (role === 'champion' || role === 'master') {
+      navItems.push(['today', '☑', 'Today'], ['grow', '🌱', 'Grow'], ['learn', '🎓', 'Learn'], ['kitchen', '🍽', 'Kitchen']);
+    }
+    if (role === 'chef') navItems.push(['kitchen', '🍽', 'Kitchen']);
+    if (role === 'client') navItems.push(['client', '📈', 'Progress']);
+    if (role === 'master') navItems.push(['master', '👁', 'Master']);
+
+    let body = '';
+    if (S.view === 'today') body = renderToday();
+    else if (S.view === 'grow') body = renderGrow();
+    else if (S.view === 'learn') body = S.lessonOpen ? renderLesson() : renderLearn();
+    else if (S.view === 'kitchen') body = renderKitchen();
+    else if (S.view === 'client') body = renderClient();
+    else if (S.view === 'master') body = renderMaster();
+
+    const showFab = (role === 'champion' || role === 'master') && !S.chatOpen;
+
+    $app.innerHTML =
+      '<div class="shell">' +
+        '<header class="topbar">' +
+          '<div class="brand">Herb<span style="color:var(--orange)">.</span> <em>' + esc(S.site ? S.site.name : cfg.SITE_TAGLINE) + '</em></div>' +
+          '<div class="who">' + esc(S.profile.full_name || S.session.user.email) + '<br>' +
+            '<span class="chip plain">' + esc(role) + '</span> <a data-act="signout">sign out</a></div>' +
+        '</header>' +
+        '<main class="main">' + body + '</main>' +
+        '<nav class="nav">' + navItems.map(([k, ico, label]) =>
+          '<button data-nav="' + k + '" class="' + (S.view === k ? 'active' : '') + '"><span class="ico">' + ico + '</span>' + label + '</button>'
+        ).join('') + '</nav>' +
+        (showFab ? '<button class="herb-fab" data-act="chat" title="Ask Herb">🌿</button>' : '') +
+      '</div>' +
+      (S.chatOpen ? renderChat() : '') +
+      (S.modal ? '<div class="modal-scrim" data-act="closemodal"><div class="modal" onclick="event.stopPropagation()">' + S.modal() + '</div></div>' : '');
+
+    wire();
+  }
+
+  function renderUnconfigured() {
+    return '<div class="login-wrap"><div class="login">' +
+      '<div class="mark">Herb</div>' +
+      '<p>' + esc(cfg.SITE_TAGLINE || '') + '</p>' +
+      '<p><strong>Not configured yet.</strong> Open <code>assets/js/config.js</code> and paste in the Supabase URL and anon key from the setup guide, then reload.</p>' +
+      '</div></div>';
+  }
+
+  function renderLogin() {
+    return '<div class="login-wrap"><div class="login">' +
+      '<div class="mark">Herb</div>' +
+      '<p>Your growing companion</p>' +
+      '<div class="underline-accent" style="margin:10px auto 18px"></div>' +
+      '<label class="f" for="email" style="text-align:left">Email</label>' +
+      '<input type="email" id="email" placeholder="you@example.com" autocomplete="email">' +
+      '<div style="height:12px"></div>' +
+      '<button class="btn primary block" id="sendlink">Send me a sign-in link</button>' +
+      '<p class="muted" style="margin-top:14px">No passwords. Tap the link in your email and you are in. Accounts are created by Harvestory: if your email is not recognised, speak to William.</p>' +
+      '</div></div>';
+  }
+
+  function renderNoProfile() {
+    return '<div class="login-wrap"><div class="login">' +
+      '<div class="mark">Herb</div>' +
+      '<p>You are signed in as <strong>' + esc(S.session.user.email) + '</strong>, but this account has no profile yet.</p>' +
+      '<p class="muted">William sets up profiles from the Master view (or the setup guide, step 6). Once done, reload this page.</p>' +
+      '<button class="btn ghost" data-act="signout">Sign out</button>' +
+      '</div></div>';
+  }
+
+  // ----- Today -----
+  function renderToday() {
+    const t = todayISO();
+    const open = S.tasks.filter((x) => x.status === 'open' && x.due_date <= t)
+      .sort((a, b) => a.due_date.localeCompare(b.due_date));
+    const upcoming = S.tasks.filter((x) => x.status === 'open' && x.due_date > t)
+      .sort((a, b) => a.due_date.localeCompare(b.due_date)).slice(0, 5);
+    const requested = S.orders.filter((o) => o.status === 'requested');
+
+    let html = '<h1 class="page">Today<em>.</em></h1>' +
+      '<p class="page-sub">' + new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }) + '</p>';
+
+    if (!canLogCare()) {
+      html += '<div class="card sage"><h3>First: Safety First</h3>' +
+        '<p class="muted">Complete the short Safety First course in Learn to unlock logging site work. It takes a few minutes and it matters.</p>' +
+        '<button class="btn primary small" data-nav="learn">Go to Learn</button></div>';
+    }
+
+    if (requested.length) {
+      html += '<div class="eyebrow">Kitchen requests</div>';
+      for (const o of requested) {
+        const items = (o.order_items || []).map((i) => i.quantity + ' × ' + (i.varieties ? i.varieties.name : '')).join(', ');
+        html += '<div class="card"><div class="spread"><div><strong>' + esc(items || 'Order') + '</strong>' +
+          '<div class="muted">' + (o.needed_by ? 'Wanted by ' + fmtDate(o.needed_by) : 'No date given') + (o.note ? ' · ' + esc(o.note) : '') + '</div></div>' +
+          '<button class="btn orange small" data-schedule="' + o.id + '">Schedule</button></div></div>';
+      }
+    }
+
+    html += '<div class="eyebrow">Due now</div>';
+    if (!open.length) html += '<div class="card sage"><p class="muted" style="margin:0">Nothing due. The site is ahead of the day.</p></div>';
+    for (const task of open) html += taskRow(task, t);
+
+    if (upcoming.length) {
+      html += '<div class="eyebrow">Coming up</div>';
+      for (const task of upcoming) html += taskRow(task, t, true);
+    }
+    return html;
+  }
+
+  function taskRow(task, t, future) {
+    const overdue = task.due_date < t;
+    return '<div class="task' + (task.status === 'done' ? ' done' : '') + '">' +
+      '<button class="tick" data-task="' + task.id + '" ' + (future ? 'disabled' : '') + '>' + (task.status === 'done' ? '✓' : '') + '</button>' +
+      '<div><div class="t-title">' + esc(task.title) + '</div>' +
+      '<div class="t-meta">' + fmtDate(task.due_date) + '</div></div>' +
+      (overdue ? '<span class="chip red">overdue</span>' :
+        '<span class="chip ' + (future ? 'plain' : 'green') + '">' + esc(task.task_type.replace('_', ' ')) + '</span>') +
+      '</div>';
+  }
+
+  // ----- Grow -----
+  function renderGrow() {
+    let html = '<h1 class="page">Grow<em>.</em></h1>' +
+      '<p class="page-sub">Every slot, every plant, live. Tap a slot to plant or inspect.</p>' +
+      '<div class="legend">' +
+        '<span><span class="sw" style="background:#F3EDD9"></span>Germinating</span>' +
+        '<span><span class="sw" style="background:#E7EFD9"></span>Dome</span>' +
+        '<span><span class="sw" style="background:#D8E7C4"></span>Propagating</span>' +
+        '<span><span class="sw" style="background:#B7D398"></span>Growing</span>' +
+        '<span><span class="sw" style="background:var(--green-mid)"></span>Ready</span>' +
+        '<span><span class="sw" style="background:var(--orange-soft)"></span>Replant</span>' +
+      '</div>';
+    for (const sys of S.systems) {
+      const planted = S.plantings.filter((p) => p.system_id === sys.id);
+      html += '<div class="system-head"><h3 style="margin:0;font-family:var(--font-display);color:var(--green-deep)">' + esc(sys.name) + '</h3>' +
+        '<span class="muted">' + planted.length + (sys.slots ? ' / ' + sys.slots : '') + ' planted</span></div>';
+      if (sys.kind === 'nursery') {
+        html += '<div class="card sage"><p class="muted" style="margin:0">The nursery holds germinating trays and domes. Sowings begin here automatically; the visual tray view arrives with the builder.</p></div>';
+        const inNursery = planted.map((p) => plantingChipRow(p)).join('');
+        html += inNursery || '';
+        html += '<button class="btn ghost small" data-sow-system="' + sys.id + '" style="margin:4px 0 14px">Sow into the nursery</button>';
+        continue;
+      }
+      const n = Math.min(sys.slots || 0, 400);
+      const bySlot = {};
+      for (const p of planted) bySlot[p.slot_ref] = p;
+      html += '<div class="slot-grid" data-system="' + sys.id + '">';
+      for (let i = 1; i <= n; i++) {
+        const ref = 'S' + i;
+        const p = bySlot[ref];
+        if (p) {
+          const st = stageOf(p);
+          const v = S.varieties.find((x) => x.id === p.variety_id);
+          html += '<button class="slot ' + st.key + '" data-planting="' + p.id + '" title="' + esc(v ? v.name : '') + ' · ' + st.label + '">' + i + '</button>';
+        } else {
+          html += '<button class="slot" data-empty="' + sys.id + ':' + ref + '" title="Empty slot ' + i + '">' + i + '</button>';
+        }
+      }
+      html += '</div><div style="height:16px"></div>';
+    }
+    return html;
+  }
+
+  function plantingChipRow(p) {
+    const v = S.varieties.find((x) => x.id === p.variety_id);
+    const st = stageOf(p);
+    return '<div class="task"><div style="font-size:20px">🌱</div>' +
+      '<div><div class="t-title">' + esc(v ? v.name : 'Planting') + ' <span class="muted">(' + esc(p.slot_ref) + ')</span></div>' +
+      '<div class="t-meta">Sown ' + fmtDate(p.sow_date) + ' · day ' + daysBetween(p.sow_date, todayISO()) + '</div></div>' +
+      '<button class="chip green" style="border:none;cursor:pointer" data-planting="' + p.id + '">' + st.label + '</button></div>';
+  }
+
+  // ----- Learn -----
+  function renderLearn() {
+    let html = '<h1 class="page">Learn<em>.</em></h1>' +
+      '<p class="page-sub">Your journey from Trainee to certified Harvestory Champion.</p>';
+
+    html += '<div class="card deep total-level"><div class="n">' + totalLevel() + '</div><div class="l">Total level</div></div>';
+
+    html += '<div class="card">';
+    for (const sk of SKILLS) {
+      const xp = S.xp[sk] || 0;
+      const lvl = levelFromXp(xp);
+      const cur = xpForLevel(lvl), next = xpForLevel(lvl + 1);
+      const pct = Math.min(100, Math.round(((xp - cur) / Math.max(1, next - cur)) * 100));
+      html += '<div class="skill-row"><div class="spread">' +
+        '<span class="skill-name">' + SKILL_LABELS[sk] + '</span>' +
+        '<span class="skill-level">Lv ' + lvl + '</span></div>' +
+        '<div class="xpbar"><div class="fill" style="width:' + pct + '%"></div></div></div>';
+    }
+    html += '</div>';
+
+    for (const track of ['compliance', 'operation']) {
+      const cs = S.courses.filter((c) => c.track === track);
+      if (!cs.length) continue;
+      html += '<div class="eyebrow">' + (track === 'compliance' ? 'Compliance' : 'The growing operation') + '</div>';
+      for (const c of cs) {
+        const ls = S.lessons.filter((l) => l.course_id === c.id);
+        const done = ls.filter((l) => S.completions.has(l.id)).length;
+        const complete = ls.length > 0 && done === ls.length;
+        html += '<div class="card"><div class="spread"><div><h3>' + esc(c.title) + '</h3>' +
+          '<div class="muted">' + esc(c.summary) + '</div></div>' +
+          (complete ? '<span class="chip green">complete ✓</span>' : '<span class="chip plain">' + done + '/' + ls.length + '</span>') + '</div>';
+        for (const l of ls) {
+          const lc = S.completions.has(l.id);
+          html += '<div class="spread" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--cream)">' +
+            '<span>' + (lc ? '✅ ' : '📖 ') + esc(l.title) + ' <span class="muted">+' + l.xp + ' XP</span></span>' +
+            '<button class="btn small ' + (lc ? 'ghost' : 'primary') + '" data-lesson="' + l.id + '">' + (lc ? 'Reread' : 'Start') + '</button></div>';
+        }
+        html += '</div>';
+      }
+    }
+    return html;
+  }
+
+  function renderLesson() {
+    const l = S.lessonOpen;
+    const done = S.completions.has(l.id);
+    return '<button class="btn ghost small" data-act="closelesson">← Back to Learn</button>' +
+      '<h1 class="page" style="margin-top:12px">' + esc(l.title) + '</h1>' +
+      '<div class="underline-accent"></div>' +
+      '<div class="lesson-body">' + md(l.body_md) + '</div>' +
+      '<div style="height:14px"></div>' +
+      (done
+        ? '<div class="card sage"><p class="muted" style="margin:0">Completed. The knowledge is yours, the XP is banked.</p></div>'
+        : '<button class="btn orange block" data-complete-lesson="' + l.id + '">Mark complete · +' + l.xp + ' XP</button>');
+  }
+
+  // ----- Kitchen -----
+  function renderKitchen() {
+    const role = S.profile.role;
+    const growable = S.varieties.filter((v) => !v.excluded);
+    let html = '<h1 class="page">Kitchen<em>.</em></h1>';
+    if (role === 'chef') {
+      html += '<p class="page-sub">Tell the growers what you need. They will come back with a ready date.</p>';
+      html += '<div class="card"><h3>New request</h3>' +
+        '<label class="f">What do you need?</label><select id="ord-variety">' +
+        growable.map((v) => '<option value="' + v.id + '">' + esc(v.name) + '</option>').join('') + '</select>' +
+        '<label class="f">How much?</label><input type="number" id="ord-qty" value="1" min="1" max="50"> ' +
+        '<label class="f">Wanted by (optional)</label><input type="date" id="ord-date">' +
+        '<label class="f">Note (optional)</label><input type="text" id="ord-note" placeholder="e.g. for the Friday menu">' +
+        '<div style="height:12px"></div>' +
+        '<button class="btn orange block" id="ord-send">Send to the growers</button></div>';
+    } else {
+      html += '<p class="page-sub">What the kitchen has asked for, and where it stands.</p>';
+    }
+    html += '<div class="eyebrow">Requests</div>';
+    if (!S.orders.length) html += '<div class="card sage"><p class="muted" style="margin:0">No requests yet.</p></div>';
+    for (const o of S.orders) {
+      const items = (o.order_items || []).map((i) => i.quantity + ' × ' + (i.varieties ? i.varieties.name : '')).join(', ');
+      const chipClass = { requested: 'orange', scheduled: 'plain', growing: 'green', ready: 'green', fulfilled: 'plain', declined: 'red' }[o.status] || 'plain';
+      html += '<div class="card"><div class="spread"><div><strong>' + esc(items) + '</strong>' +
+        '<div class="muted">' + fmtDate(o.created_at ? o.created_at.slice(0, 10) : '') +
+        (o.ready_estimate ? ' · ready around ' + fmtDate(o.ready_estimate) : '') +
+        (o.note ? ' · ' + esc(o.note) : '') + '</div></div>' +
+        '<span class="chip ' + chipClass + '">' + o.status + '</span></div></div>';
+    }
+    return html;
+  }
+
+  // ----- Client -----
+  function renderClient() {
+    const active = S.plantings.length;
+    const lessonsDone = S.completions.size;
+    return '<h1 class="page">Progress<em>.</em></h1>' +
+      '<p class="page-sub">' + esc(S.site ? S.site.name : '') + ' at a glance.</p>' +
+      '<div class="stat-grid">' +
+      '<div class="stat"><div class="n">' + active + '</div><div class="l">Plants growing</div></div>' +
+      '<div class="stat"><div class="n">' + S.orders.filter((o) => ['fulfilled', 'ready'].includes(o.status)).length + '</div><div class="l">Kitchen orders met</div></div>' +
+      '<div class="stat"><div class="n">' + S.tasks.filter((t) => t.status === 'done').length + '</div><div class="l">Care tasks done</div></div>' +
+      '<div class="stat"><div class="n">' + lessonsDone + '</div><div class="l">Lessons completed</div></div>' +
+      '</div>' +
+      '<div class="card sage"><h3>The activation model, working</h3>' +
+      '<p class="muted" style="margin:0">Your own trained team runs this growing operation day to day, with Harvestory implementing, training and supporting. Every number above is drawn live from the site record.</p></div>';
+  }
+
+  // ----- Master -----
+  function renderMaster() {
+    return '<h1 class="page">Master<em>.</em></h1>' +
+      '<p class="page-sub">All seeing. Use the tabs below to walk the site as a champion would.</p>' +
+      '<div class="stat-grid">' +
+      '<div class="stat"><div class="n">' + S.plantings.length + '</div><div class="l">Active plantings</div></div>' +
+      '<div class="stat"><div class="n">' + S.tasks.filter((t) => t.status === 'open').length + '</div><div class="l">Open tasks</div></div>' +
+      '<div class="stat"><div class="n">' + S.orders.filter((o) => o.status === 'requested').length + '</div><div class="l">Unscheduled orders</div></div>' +
+      '<div class="stat"><div class="n">' + S.varieties.filter((v) => !v.excluded).length + '</div><div class="l">Varieties enabled</div></div>' +
+      '</div>' +
+      '<div class="card"><h3>Recent activity</h3><div id="master-events" class="muted">Loading…</div></div>' +
+      '<div class="card"><h3>People</h3><div id="master-users" class="muted">Loading…</div></div>' +
+      '<div class="card sage"><h3>Adding people</h3><p class="muted" style="margin:0">' +
+      'Invite users from the Supabase dashboard (Authentication → Users → Invite), then set their role and site in the profiles table. The setup guide, step 6, has the exact snippet.</p></div>';
+  }
+
+  async function fillMasterPanels() {
+    const evEl = document.getElementById('master-events');
+    const usEl = document.getElementById('master-users');
+    if (evEl) {
+      const { data } = await sb.from('events').select('event_type, payload, created_at').order('created_at', { ascending: false }).limit(12);
+      evEl.innerHTML = (data || []).map((e) =>
+        '<div style="padding:4px 0;border-bottom:1px solid var(--cream)"><strong>' + esc(e.event_type) + '</strong> · ' +
+        esc(new Date(e.created_at).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })) + '</div>'
+      ).join('') || 'Nothing yet.';
+    }
+    if (usEl) {
+      const { data } = await sb.from('profiles').select('full_name, role');
+      usEl.innerHTML = (data || []).map((u) =>
+        '<div style="padding:4px 0;border-bottom:1px solid var(--cream)">' + esc(u.full_name || '(no name)') + ' · <span class="chip plain">' + esc(u.role) + '</span></div>'
+      ).join('') || 'Just you so far.';
+    }
+  }
+
+  // ----- Herb chat -----
+  function renderChat() {
+    const log = S.chatLog.length ? S.chatLog : [{
+      role: 'herb',
+      content: 'Hey, I’m Herb. Ask me anything about the plants, the systems or the day’s jobs. You can send a photo too — leaf undersides are always worth showing me.'
+    }];
+    return '<div class="chat-wrap">' +
+      '<div class="chat-top"><span class="t">Herb 🌿</span><button data-act="closechat">✕</button></div>' +
+      '<div class="chat-log" id="chatlog">' + log.map((m) =>
+        '<div class="bubble ' + (m.role === 'user' ? 'user' : 'herb') + (m.thinking ? ' thinking' : '') + '">' +
+        (m.photoUrl ? '<img src="' + m.photoUrl + '" alt="photo">' : '') + esc(m.content) + '</div>'
+      ).join('') + '</div>' +
+      (S.pendingPhoto ? '<div style="padding:6px 14px;background:var(--white)" class="muted">📷 Photo attached · <a data-act="clearphoto" style="cursor:pointer;text-decoration:underline">remove</a></div>' : '') +
+      '<div class="chat-input">' +
+        '<button class="iconbtn" data-act="photo" title="Attach a photo">📷</button>' +
+        '<input type="file" id="photofile" accept="image/*" capture="environment" style="display:none">' +
+        '<textarea id="chatmsg" rows="1" placeholder="Ask Herb…"></textarea>' +
+        '<button class="iconbtn send" data-act="send" title="Send">➤</button>' +
+      '</div></div>';
+  }
+
+  async function sendChat() {
+    const ta = document.getElementById('chatmsg');
+    const text = (ta ? ta.value : '').trim();
+    if (!text && !S.pendingPhoto) return;
+
+    if (!S.conversationId) {
+      const { data } = await sb.from('herb_conversations').insert({
+        user_id: S.session.user.id, site_id: S.site ? S.site.id : null
+      }).select().single();
+      S.conversationId = data ? data.id : null;
+    }
+
+    const photo = S.pendingPhoto;
+    S.chatLog.push({ role: 'user', content: text || '(photo)', photoUrl: photo ? photo.previewUrl : null });
+    S.chatLog.push({ role: 'herb', content: 'Herb is thinking…', thinking: true });
+    S.pendingPhoto = null;
+    render();
+    scrollChat();
+
+    try {
+      const { data, error } = await sb.functions.invoke('herb-chat', {
+        body: {
+          conversation_id: S.conversationId,
+          message: text,
+          image_base64: photo ? photo.base64 : null,
+          image_mime: photo ? photo.mime : null
+        }
+      });
+      S.chatLog = S.chatLog.filter((m) => !m.thinking);
+      if (error || !data || !data.reply) {
+        S.chatLog.push({ role: 'herb', content: 'I could not reach my thinking just now. Try again in a moment, and if it keeps happening, tell William.' });
+      } else {
+        S.chatLog.push({ role: 'herb', content: data.reply });
+      }
+    } catch (e) {
+      S.chatLog = S.chatLog.filter((m) => !m.thinking);
+      S.chatLog.push({ role: 'herb', content: 'Something went wrong on the way to my brain. Try again in a moment.' });
+    }
+    render();
+    scrollChat();
+  }
+
+  function scrollChat() {
+    const el = document.getElementById('chatlog');
+    if (el) el.scrollTop = el.scrollHeight;
+  }
+
+  // ----- modals -----
+  function openPlantModal(systemId, slotRef) {
+    const growable = S.varieties.filter((v) => !v.excluded);
+    S.modal = () =>
+      '<h3>Plant ' + esc(slotRef ? 'slot ' + slotRef.replace('S', '') : 'the nursery') + '</h3>' +
+      '<label class="f">Variety</label><select id="pm-variety">' +
+      growable.map((v) => '<option value="' + v.id + '">' + esc(v.name) + (v.timings_verified ? '' : ' (draft timings)') + '</option>').join('') +
+      '</select>' +
+      '<label class="f">Sow date</label><input type="date" id="pm-date" value="' + todayISO() + '">' +
+      '<div style="height:14px"></div>' +
+      '<button class="btn primary block" data-confirm-sow="' + systemId + ':' + (slotRef || '') + '">Sow it</button>';
+    render();
+  }
+
+  function openPlantingModal(p) {
+    const v = S.varieties.find((x) => x.id === p.variety_id) || {};
+    const st = stageOf(p);
+    const day = daysBetween(p.sow_date, todayISO());
+    S.modal = () =>
+      '<h3>' + esc(v.name || 'Planting') + ' <span class="muted">(' + esc(p.slot_ref) + ')</span></h3>' +
+      '<p class="muted">Sown ' + fmtDate(p.sow_date) + ' · day ' + day + ' · <strong>' + st.label + '</strong></p>' +
+      '<div class="card sage" style="margin:10px 0"><strong>What good looks like</strong>' +
+      '<div class="muted">Temp ' + (v.temp_min || '?') + ' to ' + (v.temp_max || '?') + '°C · humidity ' + (v.humidity_min || '?') + ' to ' + (v.humidity_max || '?') + '% · EC ' + (v.ec_min || '?') + ' to ' + (v.ec_max || '?') + ' · pH ' + (v.ph_min || '?') + ' to ' + (v.ph_max || '?') +
+      (v.timings_verified ? '' : '<br><em>Draft timings: sanity-check against the site.</em>') + '</div></div>' +
+      '<p class="muted">' + esc(v.kitchen_uses ? 'Kitchen: ' + v.kitchen_uses : '') + '</p>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' +
+      '<button class="btn primary small" data-log-cut="' + p.id + '">Log a cut 🌿</button>' +
+      '<button class="btn ghost small" data-remove-planting="' + p.id + '">Remove plant</button>' +
+      '</div>';
+    render();
+  }
+
+  // ---------- wiring ----------
+  function wireLogin() {
+    const btn = document.getElementById('sendlink');
+    if (!btn) return;
+    btn.addEventListener('click', async () => {
+      const email = (document.getElementById('email').value || '').trim();
+      if (!email) return;
+      btn.disabled = true; btn.textContent = 'Sending…';
+      const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: window.location.href.split('#')[0] } });
+      btn.textContent = error ? 'Try again' : 'Link sent · check your email';
+      if (!error) toast('Sign-in link sent to ' + email);
+      else btn.disabled = false;
+    });
+  }
+
+  function wire() {
+    $app.querySelectorAll('[data-nav]').forEach((el) =>
+      el.addEventListener('click', () => { S.view = el.dataset.nav; S.lessonOpen = null; S.modal = null; render(); if (S.view === 'master') fillMasterPanels(); }));
+
+    $app.querySelectorAll('[data-act="signout"]').forEach((el) =>
+      el.addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); }));
+
+    $app.querySelectorAll('[data-act="chat"]').forEach((el) =>
+      el.addEventListener('click', () => { S.chatOpen = true; render(); scrollChat(); }));
+    $app.querySelectorAll('[data-act="closechat"]').forEach((el) =>
+      el.addEventListener('click', () => { S.chatOpen = false; render(); }));
+
+    $app.querySelectorAll('[data-act="closemodal"]').forEach((el) =>
+      el.addEventListener('click', () => { S.modal = null; render(); }));
+
+    $app.querySelectorAll('[data-task]').forEach((el) =>
+      el.addEventListener('click', () => {
+        const task = S.tasks.find((t) => t.id === el.dataset.task);
+        if (task && task.status === 'open') completeTask(task);
+      }));
+
+    $app.querySelectorAll('[data-empty]').forEach((el) =>
+      el.addEventListener('click', () => {
+        if (!canLogCare()) { toast('Complete the Safety First course to plant'); return; }
+        const [systemId, ref] = el.dataset.empty.split(':');
+        openPlantModal(systemId, ref);
+      }));
+
+    $app.querySelectorAll('[data-sow-system]').forEach((el) =>
+      el.addEventListener('click', () => {
+        if (!canLogCare()) { toast('Complete the Safety First course to plant'); return; }
+        const sys = S.systems.find((s) => s.id === el.dataset.sowSystem);
+        const count = S.plantings.filter((p) => p.system_id === sys.id).length;
+        openPlantModal(sys.id, 'N' + (count + 1));
+      }));
+
+    $app.querySelectorAll('[data-planting]').forEach((el) =>
+      el.addEventListener('click', () => {
+        const p = S.plantings.find((x) => x.id === el.dataset.planting);
+        if (p) openPlantingModal(p);
+      }));
+
+    $app.querySelectorAll('[data-confirm-sow]').forEach((el) =>
+      el.addEventListener('click', async () => {
+        const [systemId, ref] = el.dataset.confirmSow.split(':');
+        const varietyId = document.getElementById('pm-variety').value;
+        const sowDate = document.getElementById('pm-date').value || todayISO();
+        S.modal = null;
+        await sowPlanting(systemId, ref || 'N1', varietyId, sowDate, null);
+        render();
+      }));
+
+    $app.querySelectorAll('[data-log-cut]').forEach((el) =>
+      el.addEventListener('click', async () => {
+        if (!canLogCare()) { toast('Complete the Safety First course first'); return; }
+        const p = S.plantings.find((x) => x.id === el.dataset.logCut);
+        const v = S.varieties.find((x) => x.id === p.variety_id);
+        await logEvent('harvest', { planting_id: p.id, variety: v ? v.name : '', slot: p.slot_ref });
+        await grantXp('harvesting', 25, 'Harvest: ' + (v ? v.name : ''));
+        S.modal = null; render();
+      }));
+
+    $app.querySelectorAll('[data-remove-planting]').forEach((el) =>
+      el.addEventListener('click', async () => {
+        const p = S.plantings.find((x) => x.id === el.dataset.removePlanting);
+        await sb.from('plantings').update({ status: 'removed' }).eq('id', p.id);
+        await logEvent('plant_removed', { planting_id: p.id });
+        S.plantings = S.plantings.filter((x) => x.id !== p.id);
+        S.modal = null; render();
+      }));
+
+    $app.querySelectorAll('[data-lesson]').forEach((el) =>
+      el.addEventListener('click', () => {
+        S.lessonOpen = S.lessons.find((l) => l.id === el.dataset.lesson);
+        render(); window.scrollTo(0, 0);
+      }));
+    $app.querySelectorAll('[data-act="closelesson"]').forEach((el) =>
+      el.addEventListener('click', () => { S.lessonOpen = null; render(); }));
+
+    $app.querySelectorAll('[data-complete-lesson]').forEach((el) =>
+      el.addEventListener('click', async () => {
+        const l = S.lessons.find((x) => x.id === el.dataset.completeLesson);
+        const { error } = await sb.from('completions').insert({ user_id: S.session.user.id, lesson_id: l.id });
+        if (error) { toast('Could not save'); return; }
+        S.completions.add(l.id);
+        const course = S.courses.find((c) => c.id === l.course_id);
+        await logEvent('lesson_complete', { lesson: l.slug });
+        await grantXp(course ? course.skill : 'growing', l.xp, 'Lesson: ' + l.title);
+        S.lessonOpen = null; render();
+      }));
+
+    const ordSend = document.getElementById('ord-send');
+    if (ordSend) ordSend.addEventListener('click', async () => {
+      const varietyId = document.getElementById('ord-variety').value;
+      const qty = parseInt(document.getElementById('ord-qty').value || '1', 10);
+      const date = document.getElementById('ord-date').value || null;
+      const note = document.getElementById('ord-note').value || '';
+      const { data: o, error } = await sb.from('orders').insert({
+        site_id: S.site.id, chef_id: S.session.user.id, needed_by: date, note
+      }).select().single();
+      if (error || !o) { toast('Could not send the request'); return; }
+      await sb.from('order_items').insert({ order_id: o.id, variety_id: varietyId, quantity: qty });
+      await logEvent('order_placed', { order_id: o.id, variety_id: varietyId, quantity: qty });
+      toast('Sent to the growers 🌿');
+      await loadAll();
+    });
+
+    $app.querySelectorAll('[data-schedule]').forEach((el) =>
+      el.addEventListener('click', async () => {
+        const o = S.orders.find((x) => x.id === el.dataset.schedule);
+        const items = o.order_items || [];
+        let latest = todayISO();
+        const nursery = S.systems.find((s) => s.kind === 'nursery') || S.systems[0];
+        for (const it of items) {
+          const v = S.varieties.find((x) => x.id === it.variety_id);
+          if (!v) continue;
+          const count = S.plantings.filter((p) => p.system_id === nursery.id).length;
+          await sowPlanting(nursery.id, 'N' + (count + 1), it.variety_id, todayISO(), o.id);
+          const ready = addDays(todayISO(), v.days_to_first_cut);
+          if (ready > latest) latest = ready;
+        }
+        await sb.from('orders').update({ status: 'scheduled', ready_estimate: latest }).eq('id', o.id);
+        o.status = 'scheduled'; o.ready_estimate = latest;
+        toast('Scheduled. Ready around ' + fmtDate(latest));
+        render();
+      }));
+
+    // chat input
+    $app.querySelectorAll('[data-act="send"]').forEach((el) => el.addEventListener('click', sendChat));
+    const ta = document.getElementById('chatmsg');
+    if (ta) ta.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+    });
+    $app.querySelectorAll('[data-act="photo"]').forEach((el) =>
+      el.addEventListener('click', () => document.getElementById('photofile').click()));
+    $app.querySelectorAll('[data-act="clearphoto"]').forEach((el) =>
+      el.addEventListener('click', () => { S.pendingPhoto = null; render(); }));
+    const pf = document.getElementById('photofile');
+    if (pf) pf.addEventListener('change', () => {
+      const f = pf.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const url = reader.result; // data URL
+        const base64 = String(url).split(',')[1];
+        S.pendingPhoto = { base64, mime: f.type || 'image/jpeg', previewUrl: url };
+        render();
+      };
+      reader.readAsDataURL(f);
+    });
+
+    if (S.view === 'master') fillMasterPanels();
+  }
+
+  // ---------- boot ----------
+  async function boot() {
+    if (!configured) { render(); return; }
+    const { data: { session } } = await sb.auth.getSession();
+    S.session = session;
+    sb.auth.onAuthStateChange((_evt, sess) => {
+      const had = !!S.session;
+      S.session = sess;
+      if (!!sess !== had) { sess ? loadAll() : render(); }
+    });
+    if (S.session) await loadAll(); else render();
+  }
+
+  boot();
+})();
+
+</script>
+</body>
+</html>

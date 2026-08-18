@@ -1,0 +1,12 @@
+{
+  "name": "Herb · Your growing companion",
+  "short_name": "Herb",
+  "description": "Training, crop cycles and daily care for Harvestory Champions.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#FBF7EF",
+  "theme_color": "#2D5016",
+  "icons": [
+    { "src": "herb-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
